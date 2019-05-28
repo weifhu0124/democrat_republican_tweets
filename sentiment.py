@@ -165,6 +165,13 @@ if __name__ == "__main__":
 	print("\nEvaluating")
 	classify.evaluate(sentiment.trainX, sentiment.trainy, cls, 'train')
 	classify.evaluate(sentiment.devX, sentiment.devy, cls, 'dev')
+	import pickle
+	with open('model/logistic_regression.pkl', 'wb') as fp:
+		pickle.dump(cls, fp)
+	with open('model/sentiment_tfidf.pkl', 'wb') as fp:
+		pickle.dump(sentiment.tfidf_vect, fp)
+	with open('model/sentiment_dev.pkl', 'wb') as fp:
+		pickle.dump(sentiment.dev_data, fp)
 
 	# print("\nReading unlabeled data")
 	# unlabeled = read_unlabeled(tarfname, sentiment)

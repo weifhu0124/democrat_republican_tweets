@@ -1,2 +1,3 @@
 .DS_Store
-.idea
+.idea/
+__pycache__/
