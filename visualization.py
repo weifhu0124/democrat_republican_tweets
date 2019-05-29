@@ -33,12 +33,11 @@ def get_lime():
 	c = make_pipeline(sentiment_tfidf, cls)
 	explainer = LimeTextExplainer(class_names=['republican', 'democrat'])
 	idx = 231
-	exp = explainer.explain_instance(test_data[idx], c.predict_proba)
+	sample = 'Chairman @RepKevinBrady on @FoxNews and @FoxBusiness to discuss the benefits of #TaxReform. Some highlights ⬇️ https://t.co/urDcaXeWjF'
+	exp = explainer.explain_instance(sample, c.predict_proba)
 	print('Document id: %d' % idx)
-	print('Probability(democrat) =', c.predict_proba([test_data[idx]])[0, 1])
+	print('Probability(democrat) =', c.predict_proba([sample])[0, 1])
 	exp.save_to_file('html/result.html')
-	print(exp.as_list())
-	#print(exp.map_exp_ids(exp.as_map()[1]))
 
 
 
