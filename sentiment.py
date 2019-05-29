@@ -20,8 +20,8 @@ def read_files(tarfname):
 	"""
 	# import tarfile
 	# tar = tarfile.open(tarfname, "r:gz")
-	trainname = "data/reviews/train.tsv"
-	devname = "data/reviews/test.tsv"
+	trainname = "data/politics/train.tsv"
+	devname = "data/politics/test.tsv"
 	# for member in tar.getmembers():
 	# 	if 'train.tsv' in member.name:
 	# 		trainname = member.name
@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
 	print('\nTuning the hyperparameter')
 	import numpy as np
-	hyperparameters = np.linspace(0.1, 1, 10)
+	hyperparameters = np.linspace(3.0, 4.0, 10)
 	print('\nHyperparameter range:', hyperparameters)
 	c = classify.parameter_search(sentiment.trainX, sentiment.trainy, sentiment.devX, sentiment.devy, hyperparameters)
 	print('\nBest regularization term', c)
@@ -172,6 +172,8 @@ if __name__ == "__main__":
 		pickle.dump(sentiment.tfidf_vect, fp)
 	with open('model/sentiment_dev.pkl', 'wb') as fp:
 		pickle.dump(sentiment.dev_data, fp)
+	with open('model/sentiment_train.pkl', 'wb') as fp:
+		pickle.dump(sentiment.train_data, fp)
 
 	# print("\nReading unlabeled data")
 	# unlabeled = read_unlabeled(tarfname, sentiment)

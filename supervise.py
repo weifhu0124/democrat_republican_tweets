@@ -13,10 +13,10 @@ def feature_engineering(sentiment):
 	from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 	from nltk.corpus import stopwords
 	stopWords = set(stopwords.words('english'))
-	stopWords.remove('not')
-	stopWords.remove('but')
-	stopWords.add('chicago')
-	stopWords.add('michigan')
+	#stopWords.remove('not')
+	#stopWords.remove('but')
+	#stopWords.add('chicago')
+	#stopWords.add('michigan')
 	sentiment.count_vect = CountVectorizer(stop_words=list(stopWords), ngram_range=(1,3),min_df=2)
 	sentiment.tfidf_vect = TfidfVectorizer(stop_words=list(stopWords), ngram_range=(1,3), min_df=2, sublinear_tf=True)
 	sentiment.trainX = sentiment.tfidf_vect.fit_transform(sentiment.train_data)

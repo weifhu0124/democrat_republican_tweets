@@ -15,8 +15,10 @@ def evaluate(X, yt, cls, name='data'):
 	from sklearn import metrics
 	yp = cls.predict(X)
 	acc = metrics.accuracy_score(yt, yp)
+	f1 = metrics.f1_score(yt, yp)
 	print(metrics.confusion_matrix(yt, yp))
 	print("  Accuracy on %s  is: %s" % (name, acc))
+	print("  F1 on %s  is: %s" % (name, f1))
 	return acc
 
 def parameter_search(trainX, trainY, devX, devY, regularizations):
