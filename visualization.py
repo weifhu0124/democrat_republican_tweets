@@ -31,11 +31,11 @@ def get_lime():
 	with open('model/sentiment_dev.pkl', 'rb') as fp:
 		test_data = pickle.load(fp)
 	c = make_pipeline(sentiment_tfidf, cls)
-	explainer = LimeTextExplainer(class_names=['democrat', 'republican'])
-	idx = 43
+	explainer = LimeTextExplainer(class_names=['republican', 'democrat'])
+	idx = 231
 	exp = explainer.explain_instance(test_data[idx], c.predict_proba)
 	print('Document id: %d' % idx)
-	print('Probability(republican) =', c.predict_proba([test_data[idx]])[0, 1])
+	print('Probability(democrat) =', c.predict_proba([test_data[idx]])[0, 1])
 	exp.save_to_file('html/result.html')
 	print(exp.as_list())
 	#print(exp.map_exp_ids(exp.as_map()[1]))
@@ -62,15 +62,15 @@ def get_extreme_example():
 		if prob < curmin or curmin == -1:
 			curmin = prob
 			min_str = train_data[i]
-	print('Most republican:', max_str)
-	print('Most democrat:', min_str)
+	print('Most democrat:', max_str)
+	print('Most republican:', min_str)
 	return max_str, min_str
 
 
 
 if __name__ == '__main__':
-	# get_extreme_example()
+	#get_extreme_example()
 	get_lime()
-	# pos, neg = get_terms(15)
-	# print('republican words', pos)
-	# print('democrat words', neg)
+	#pos, neg = get_terms(15)
+	#print('democrat words', pos)
+	#print('republican words', neg)

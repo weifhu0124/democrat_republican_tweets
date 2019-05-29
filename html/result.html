@@ -37088,25 +37088,25 @@
 /***/ })
 /******/ ]);
 //# sourceMappingURL=bundle.js.map </script></head><body>
-        <div class="lime top_div" id="top_divPPNG6PNC6D27CDT"></div>
+        <div class="lime top_div" id="top_divYTGF0KAN7TIUHZ3"></div>
         
         <script>
-        var top_div = d3.select('#top_divPPNG6PNC6D27CDT').classed('lime top_div', true);
+        var top_div = d3.select('#top_divYTGF0KAN7TIUHZ3').classed('lime top_div', true);
         
             var pp_div = top_div.append('div')
                                 .classed('lime predict_proba', true);
             var pp_svg = pp_div.append('svg').style('width', '100%');
-            var pp = new lime.PredictProba(pp_svg, ["democrat", "republican"], [0.8126669478922961, 0.18733305210770393]);
+            var pp = new lime.PredictProba(pp_svg, ["republican", "democrat"], [0.024307682653075813, 0.9756923173469242]);
             
         
         var exp_div;
-            var exp = new lime.Explanation(["democrat", "republican"]);
+            var exp = new lime.Explanation(["republican", "democrat"]);
         
                 exp_div = top_div.append('div').classed('lime explanation', true);
-                exp.show([["Fair", -0.12897194784257215], ["Pay", -0.12095854923118728], ["BarackObama", -0.10881075836840164], ["Lilly", -0.0805448530985138], ["ago", -0.06352134993569925], ["Nine", 0.061196991936297906], ["Ledbetter", -0.057802013871318864], ["law", 0.05627071662693676], ["bill", 0.05613755270577667], ["signing", 0.033207968286512346]], 1, exp_div);
+                exp.show([["GOPTaxScam", 0.22491778393097359], ["Instead", 0.07217896496087314], ["relief", -0.06772440468295787], ["middle", 0.06694604921567225], ["class", 0.03968054740538978], ["million", 0.03696913898129275], ["families", 0.036911755556411824], ["taxes", -0.03278685517801538], ["86", 0.03114318437611485], ["ultimately", -0.015221329789241303]], 1, exp_div);
                 
         var raw_div = top_div.append('div');
-            exp.show_raw_text([["Fair", 87, -0.12897194784257215], ["Pay", 92, -0.12095854923118728], ["BarackObama", 23, -0.10881075836840164], ["Lilly", 71, -0.0805448530985138], ["ago", 11, -0.06352134993569925], ["Nine", 0, 0.061196991936297906], ["Ledbetter", 77, -0.057802013871318864], ["law", 62, 0.05627071662693676], ["bill", 52, 0.05613755270577667], ["signing", 107, 0.033207968286512346]], 1, "Nine years ago today, @BarackObama signed his first bill into law: the Lilly Ledbetter Fair Pay Act. While signing\u2026 https://t.co/zmCQUmeoC7", raw_div, true);
+            exp.show_raw_text([["GOPTaxScam", 61, 0.22491778393097359], ["Instead", 0, 0.07217896496087314], ["relief", 21, -0.06772440468295787], ["middle", 110, 0.06694604921567225], ["class", 117, 0.03968054740538978], ["million", 102, 0.03696913898129275], ["families", 123, 0.036911755556411824], ["taxes", 90, -0.03278685517801538], ["86", 99, 0.03114318437611485], ["ultimately", 72, -0.015221329789241303]], 1, "Instead of providing relief for hard-working Americans, the #GOPTaxScam ultimately raises taxes on 86 million middle class families. #TaxDay", raw_div, true);
             
         </script>
         </body></html>

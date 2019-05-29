@@ -20,8 +20,8 @@ def read_files(tarfname):
 	"""
 	# import tarfile
 	# tar = tarfile.open(tarfname, "r:gz")
-	trainname = "data/politics/train.tsv"
-	devname = "data/politics/test.tsv"
+	trainname = "data/train.tsv"
+	devname = "data/test.tsv"
 	# for member in tar.getmembers():
 	# 	if 'train.tsv' in member.name:
 	# 		trainname = member.name
