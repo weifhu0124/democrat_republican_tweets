@@ -16,9 +16,9 @@ model2: Twitter Democrat/Republican model
 '''
 cls_m1 = None
 tfidf_m1 = None
-with open('model/cls.pkl', 'rb') as fp:
+with open('task2/model/cls.pkl', 'rb') as fp:
   cls_m2 = pickle.load(fp)
-with open('model/sentiment_tfidf.pkl', 'rb') as fp:
+with open('task2/model/sentiment_tfidf.pkl', 'rb') as fp:
   tfidf_m2 = pickle.load(fp)
 
 def get_class_proba(text, cls, tfidf):
@@ -78,7 +78,7 @@ def upload():
   text = text.lower()
   cls, tfidf = components[model_type]['cls'], components[model_type]['tfidf']
   res = {}
-  res['class_name'] = ["republican", "democrat"]
+  res['class_name'] = ["democrat", "republican"]
   res['class_proba'] = get_class_proba(text, cls, tfidf)
   res['feature_weights'] = get_feature_weights(text, cls, tfidf)
   res['feature_view'] = get_feature_view(text, res['feature_weights'])
