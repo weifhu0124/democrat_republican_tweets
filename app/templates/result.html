@@ -1,0 +1,27 @@
+<html>
+        <meta http-equiv="content-type" content="text/html; charset=UTF8">
+        <head><script type = "text/javascript" src = "static/js/view.js">  </script></head>
+    <body>
+        <div class="lime top_div" id="top_div8LMVY6W2IHG40YN"></div>
+        <script type="text/javascript">
+        	var data = {{data|tojson}}
+
+			var top_div = d3.select('#top_div8LMVY6W2IHG40YN').classed('lime top_div', true);
+            var pp_div = top_div.append('div')
+                                .classed('lime predict_proba', true);
+            var pp_svg = pp_div.append('svg').style('width', '100%');
+            var pp = new lime.PredictProba(pp_svg, data.class_name, data.class_proba);
+            
+        
+        var exp_div;
+            var exp = new lime.Explanation(["republican", "democrat"]);
+        
+                exp_div = top_div.append('div').classed('lime explanation', true);
+                exp.show(data.feature_weights, 1, exp_div);
+                
+        var raw_div = top_div.append('div');
+            exp.show_raw_text(data.feature_view, 1, data.raw_str, raw_div, true);
+
+        </script>
+    </body>
+</html>
