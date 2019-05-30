@@ -23,7 +23,7 @@ with open('task2/model/sentiment_tfidf.pkl', 'rb') as fp:
 
 def get_class_proba(text, cls, tfidf):
     X = tfidf.transform([text])
-    return cls.predict_proba(X).tolist()[0]
+    return cls.predict_proba(X).tolist()[0][::-1]
 
 def get_feature_weights(text, cls, tfidf):
   X = tfidf.transform([text])
@@ -37,7 +37,7 @@ def get_feature_weights(text, cls, tfidf):
     token = " ".join(gram)
     if token in vocab:
       idx = vocab[token]
-      weights.append([token, coef[idx]*tfidf.idf_[idx]])
+      weights.append([token, (-1)*coef[idx]*tfidf.idf_[idx]])
     else:
       print(token)
   weights.sort(key = lambda x:abs(x[1]), reverse=True)
@@ -59,6 +59,7 @@ def run():
 @app.route('/upload',methods=['post'])
 def upload():
   if request.method == 'POST':
+    print(request.form)
     text = request.form.get('text')
     model_type = request.form.get('model_type')
 
@@ -78,7 +79,7 @@ def upload():
   text = text.lower()
   cls, tfidf = components[model_type]['cls'], components[model_type]['tfidf']
   res = {}
-  res['class_name'] = ["democrat", "republican"]
+  res['class_name'] = ["republican", "democrat"]
   res['class_proba'] = get_class_proba(text, cls, tfidf)
   res['feature_weights'] = get_feature_weights(text, cls, tfidf)
   res['feature_view'] = get_feature_view(text, res['feature_weights'])
