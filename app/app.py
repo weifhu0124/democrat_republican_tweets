@@ -30,6 +30,8 @@ def get_feature_weights(text, cls, tfidf):
   coef = cls.coef_[0]
   grams = list(everygrams(text.split(), 1, 3))
   vocab = tfidf.vocabulary_
+  # f = open('vocab.txt','w')
+  # f.write(str(vocab))
   weights = []
   for gram in grams:
     token = " ".join(gram)
@@ -73,7 +75,7 @@ def upload():
       'tfidf': tfidf_m2
     },
   }
-
+  text = text.lower()
   cls, tfidf = components[model_type]['cls'], components[model_type]['tfidf']
   res = {}
   res['class_name'] = ["republican", "democrat"]
