@@ -20,8 +20,8 @@ def read_files(tarfname):
 	"""
 	# import tarfile
 	# tar = tarfile.open(tarfname, "r:gz")
-	trainname = "data/train.tsv"
-	devname = "data/test.tsv"
+	trainname = "data/politics/train.tsv"
+	devname = "data/politics/test.tsv"
 	# for member in tar.getmembers():
 	# 	if 'train.tsv' in member.name:
 	# 		trainname = member.name
@@ -166,7 +166,7 @@ if __name__ == "__main__":
 	classify.evaluate(sentiment.trainX, sentiment.trainy, cls, 'train')
 	classify.evaluate(sentiment.devX, sentiment.devy, cls, 'dev')
 	import pickle
-	with open('model/logistic_regression.pkl', 'wb') as fp:
+	with open('model/cls.pkl', 'wb') as fp:
 		pickle.dump(cls, fp)
 	with open('model/sentiment_tfidf.pkl', 'wb') as fp:
 		pickle.dump(sentiment.tfidf_vect, fp)

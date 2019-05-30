@@ -5,7 +5,7 @@ from sklearn.pipeline import make_pipeline
 from matplotlib import pyplot as plt
 
 def get_terms(idx):
-	with open('model/logistic_regression.pkl', 'rb') as fp:
+	with open('model/cls.pkl', 'rb') as fp:
 		cls = pickle.load(fp)
 	with open('model/sentiment_tfidf.pkl', 'rb') as fp:
 		sentiment = pickle.load(fp)
@@ -24,7 +24,7 @@ def get_terms(idx):
 	return positive_words, negative_words
 
 def get_lime():
-	with open('model/logistic_regression.pkl', 'rb') as fp:
+	with open('model/cls.pkl', 'rb') as fp:
 		cls = pickle.load(fp)
 	with open('model/sentiment_tfidf.pkl', 'rb') as fp:
 		sentiment_tfidf = pickle.load(fp)
@@ -42,7 +42,7 @@ def get_lime():
 
 
 def get_extreme_example():
-	with open('model/logistic_regression.pkl', 'rb') as fp:
+	with open('model/cls.pkl', 'rb') as fp:
 		cls = pickle.load(fp)
 	with open('model/sentiment_tfidf.pkl', 'rb') as fp:
 		sentiment_tfidf = pickle.load(fp)
