@@ -2,26 +2,32 @@
 <html>
 <head> 
 <meta charset="utf-8"> 
-<title>input</title> 
+<title>CSE 256 Final Demo</title> 
+<script type = "text/javascript" src = "static/js/view.js">  </script>
 </head>
 <body>
 
-<div id="container" style="display:block;padding:1em;width:50%">
+<div style="width: 100%; overflow: hidden;">
+    <div id="container" style="display:block;padding:1em;float:left;width:30em">
 
-    <form action="/upload" method="post">
-        <div class="form-group">
-            <label for="text">Input Text</label>
-            <textarea class="form-control text" id="text" name="text" rows="3"></textarea>
-        </div>
-        Choose your model
-        <div class="form-group">
-          <select class="form-control" name="model_type" id="inputModel">
-              <option value="model1"> Sentiment - Model 1 </option>
-              <option value="model2"> Political - Model 2</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+        <form action="/upload" method="post">
+            <div class="form-group">
+                <label for="text">Input Text</label>
+                <textarea class="form-control text" id="text" name="text" rows="3"></textarea>
+            </div>
+            Choose your model
+            <div class="form-group">
+              <select class="form-control" name="model_type" id="inputModel">
+                  <option value="model1"> Sentiment - Model 1 </option>
+                  <option value="model2"> Political - Model 2</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div id="container2" style="display:block;padding-right:1em;float:left;width:40em">
+        <img id='static-info' src="static/images/model1.png" style="width:100%;height:100%">
+    </div>
 </div>
 
 </body>
@@ -33,4 +39,15 @@
 
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+<script>
+    $("#inputModel").change(function(){
+        if (this.value == 'model2'){
+            $('#static-info')[0].src = "static/images/model2.png"
+        }
+        else{
+            $('#static-info')[0].src = "static/images/model1.png"
+        }
+    })
+</script>
 </html>
