@@ -23,7 +23,7 @@ with open('task2/model/sentiment_tfidf.pkl', 'rb') as fp:
 
 def get_class_proba(text, cls, tfidf):
     X = tfidf.transform([text])
-    return cls.predict_proba(X).tolist()[0][::-1]
+    return cls.predict_proba(X).tolist()[0]
 
 def get_feature_weights(text, cls, tfidf):
   X = tfidf.transform([text])
@@ -37,7 +37,7 @@ def get_feature_weights(text, cls, tfidf):
     token = " ".join(gram)
     if token in vocab:
       idx = vocab[token]
-      weights.append([token, (-1)*coef[idx]*tfidf.idf_[idx]])
+      weights.append([token, coef[idx]*tfidf.idf_[idx]])
     else:
       print(token)
   weights.sort(key = lambda x:abs(x[1]), reverse=True)

@@ -4,15 +4,20 @@ from lime.lime_text import LimeTextExplainer
 from sklearn.pipeline import make_pipeline
 from matplotlib import pyplot as plt
 
+with open('task2/model/cls.pkl', 'rb') as fp:
+	cls = pickle.load(fp)
+with open('task2/model/sentiment_tfidf.pkl', 'rb') as fp:
+	sentiment_tfidf = pickle.load(fp)
+with open('task2/model/sentiment_dev.pkl', 'rb') as fp:
+	test_data = pickle.load(fp)
+with open('task2/model/sentiment_train.pkl', 'rb') as fp:
+	train_data = pickle.load(fp)
+
 def get_terms(idx):
-	with open('model/cls.pkl', 'rb') as fp:
-		cls = pickle.load(fp)
-	with open('model/sentiment_tfidf.pkl', 'rb') as fp:
-		sentiment = pickle.load(fp)
 	print(cls.classes_)
 
 	idx = np.argsort(np.asarray(cls.coef_[0]))
-	terms = sentiment.vocabulary_
+	terms = sentiment_tfidf.vocabulary_
 	terms = {v: k for k, v in terms.items()}
 	positive_words = []
 	negative_words = []
@@ -24,12 +29,6 @@ def get_terms(idx):
 	return positive_words, negative_words
 
 def get_lime():
-	with open('model/cls.pkl', 'rb') as fp:
-		cls = pickle.load(fp)
-	with open('model/sentiment_tfidf.pkl', 'rb') as fp:
-		sentiment_tfidf = pickle.load(fp)
-	with open('model/sentiment_dev.pkl', 'rb') as fp:
-		test_data = pickle.load(fp)
 	c = make_pipeline(sentiment_tfidf, cls)
 	explainer = LimeTextExplainer(class_names=['republican', 'democrat'])
 	idx = 231
@@ -37,17 +36,9 @@ def get_lime():
 	exp = explainer.explain_instance(sample, c.predict_proba)
 	print('Document id: %d' % idx)
 	print('Probability(democrat) =', c.predict_proba([sample])[0, 1])
-	exp.save_to_file('html/result.html')
-
-
+	exp.save_to_file('task2/html/result.html')
 
 def get_extreme_example():
-	with open('model/cls.pkl', 'rb') as fp:
-		cls = pickle.load(fp)
-	with open('model/sentiment_tfidf.pkl', 'rb') as fp:
-		sentiment_tfidf = pickle.load(fp)
-	with open('model/sentiment_train.pkl', 'rb') as fp:
-		train_data = pickle.load(fp)
 	c = make_pipeline(sentiment_tfidf, cls)
 	curmax = -1
 	curmin = -1
