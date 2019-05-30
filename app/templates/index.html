@@ -6,16 +6,38 @@
 </head>
 <body>
 
+<div id="container" style="display:block;padding:1em;width:50%">
 
-<form action="/upload" method="post">
-<P>Text:</P> <input type="text" name="text" value="Username"><br>
-Model 1
-<input type="radio" checked="checked" name="model_type" value="model1" />
-<br />
-Model 2
-<input type="radio" name="model_type" value="model2" />
-<input type="submit" value="Submit" id = "submit">
-</form>
+    <form action="/upload" method="post">
+        <div class="form-group">
+            <label for="text">Input Text</label>
+            <textarea class="form-control text" id="text" name="text" rows="3"></textarea>
+        </div>
+        Choose your model
+        <div class="form-group">
+          <select class="form-control" name="model_type" id="inputModel">
+              <option value="model1"> Sentiment - Model 1 </option>
+              <option value="model2"> Political - Model 2</option>
+          </select>
+        </div>
+    <!--Model 1-->
+    <!--<input type="radio" checked="checked" name="model_type" value="model1" />-->
+    <!--<br />-->
+    <!--Model 2-->
+    <!--<input type="radio" name="model_type" value="model2" />-->
+
+    <!--<input type="submit" value="Submit" id = "submit">-->
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 
 </body>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </html>
