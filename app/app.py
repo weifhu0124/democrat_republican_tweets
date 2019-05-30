@@ -16,7 +16,7 @@ model2: Twitter Democrat/Republican model
 '''
 cls_m1 = None
 tfidf_m1 = None
-with open('model/logistic_regression.pkl', 'rb') as fp:
+with open('model/cls.pkl', 'rb') as fp:
   cls_m2 = pickle.load(fp)
 with open('model/sentiment_tfidf.pkl', 'rb') as fp:
   tfidf_m2 = pickle.load(fp)
