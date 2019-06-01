@@ -37088,25 +37088,25 @@
 /***/ })
 /******/ ]);
 //# sourceMappingURL=bundle.js.map </script></head><body>
-        <div class="lime top_div" id="top_divQPYDNNTR7WPZ44L"></div>
+        <div class="lime top_div" id="top_divAVE9N2GWQYDXCFF"></div>
         
         <script>
-        var top_div = d3.select('#top_divQPYDNNTR7WPZ44L').classed('lime top_div', true);
+        var top_div = d3.select('#top_divAVE9N2GWQYDXCFF').classed('lime top_div', true);
         
             var pp_div = top_div.append('div')
                                 .classed('lime predict_proba', true);
             var pp_svg = pp_div.append('svg').style('width', '100%');
-            var pp = new lime.PredictProba(pp_svg, ["republican", "democrat"], [0.9995946230750778, 0.0004053769249221538]);
+            var pp = new lime.PredictProba(pp_svg, ["republican", "democrat"], [0.9997850524898938, 0.00021494751010621115]);
             
         
         var exp_div;
             var exp = new lime.Explanation(["republican", "democrat"]);
         
                 exp_div = top_div.append('div').classed('lime explanation', true);
-                exp.show([["TaxReform", -0.02068586088598293], ["FoxBusiness", -0.01683812952750071], ["Chairman", -0.015804500229341708], ["FoxNews", -0.01551815554167607], ["RepKevinBrady", -0.009185031736655417], ["https", 0.007826030929225226], ["benefits", -0.005074663481067702], ["highlights", -0.003966836469106904], ["the", 0.002019065216145955], ["and", -0.0016299037930095084]], 1, exp_div);
+                exp.show([["TaxReform", -0.03925709779169844], ["FoxNews", -0.03686654534514574], ["Chairman", -0.027465063756960267], ["FoxBusiness", -0.02638570126652577], ["RepKevinBrady", -0.017901281915529123], ["benefits", -0.006458239342325025], ["https", 0.005142303875626087], ["co", -0.004553528198322713], ["highlights", -0.0024053943837853255], ["discuss", -0.002234689075846186]], 1, exp_div);
                 
         var raw_div = top_div.append('div');
-            exp.show_raw_text([["TaxReform", 81, -0.02068586088598293], ["FoxBusiness", 41, -0.01683812952750071], ["Chairman", 0, -0.015804500229341708], ["FoxNews", 28, -0.01551815554167607], ["RepKevinBrady", 10, -0.009185031736655417], ["https", 111, 0.007826030929225226], ["benefits", 68, -0.005074663481067702], ["highlights", 97, -0.003966836469106904], ["the", 64, 0.002019065216145955], ["and", 36, -0.0016299037930095084]], 1, "Chairman @RepKevinBrady on @FoxNews and @FoxBusiness to discuss the benefits of #TaxReform. Some highlights \u2b07\ufe0f https://t.co/urDcaXeWjF", raw_div, true);
+            exp.show_raw_text([["TaxReform", 81, -0.03925709779169844], ["FoxNews", 28, -0.03686654534514574], ["Chairman", 0, -0.027465063756960267], ["FoxBusiness", 41, -0.02638570126652577], ["RepKevinBrady", 10, -0.017901281915529123], ["benefits", 68, -0.006458239342325025], ["https", 111, 0.005142303875626087], ["co", 121, -0.004553528198322713], ["highlights", 97, -0.0024053943837853255], ["discuss", 56, -0.002234689075846186]], 1, "Chairman @RepKevinBrady on @FoxNews and @FoxBusiness to discuss the benefits of #TaxReform. Some highlights \u2b07\ufe0f https://t.co/urDcaXeWjF", raw_div, true);
             
         </script>
         </body></html>

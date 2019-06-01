@@ -61,6 +61,6 @@ def get_extreme_example():
 if __name__ == '__main__':
 	#get_extreme_example()
 	get_lime()
-	#pos, neg = get_terms(15)
-	#print('democrat words', pos)
-	#print('republican words', neg)
+	pos, neg = get_terms(15)
+	print('democrat words', pos)
+	print('republican words', neg)
