@@ -18,7 +18,7 @@
             Choose your model
             <div class="form-group">
               <select class="form-control" name="model_type" id="inputModel">
-                  <option value="model1"> Sentiment - Model 1 </option>
+                  <option value="model1" selected="selected"> Sentiment - Model 1 </option>
                   <option value="model2"> Political - Model 2</option>
               </select>
             </div>
@@ -43,11 +43,20 @@
 <script>
     $("#inputModel").change(function(){
         if (this.value == 'model2'){
-            $('#static-info')[0].src = "static/images/model2.png"
+            $('#static-info')[0].src = "static/images/model2.png";
         }
         else{
-            $('#static-info')[0].src = "static/images/model1.png"
+            $('#static-info')[0].src = "static/images/model1.png";
         }
     })
+</script>
+<script>
+    var cur_value = $("#inputModel").val();
+    if (cur_value == 'model2'){
+        $('#static-info')[0].src = "static/images/model2.png";
+    }
+    else{
+        $('#static-info')[0].src = "static/images/model1.png";
+    }
 </script>
 </html>
