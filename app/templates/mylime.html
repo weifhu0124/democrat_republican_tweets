@@ -4,7 +4,7 @@
 
   <head>
 
-    <title>testD3_chp10_1.html</title>
+    <title>data visualization</title>
 
     <script type="text/javascript" src="http://d3js.org/d3.v5.min.js">
 
@@ -44,13 +44,24 @@
 	  	</svg>
 	  </div>
 
+	  <div class = "scatter_diagram">
+	  	<svg style="width: 100%; height: 500px;">
+	  	</svg>
+	  </div>
+
 	  <div class = "text_view">
 	  	<h3>Text with highlighted words</h3>
-
+	  	<form name="my_form" action="" method="">
+			<input type="radio" checked="checked" class="model_type" name="gram" id="unigram" value="unigram" />unigram<br>
+			<input type="radio" class="model_type" name="gram" id="bigram" value="bigram" />bigram<br>
+			<!-- <input type="submit" value="Submit" id = "submit"> -->
+	  	</form>
 	  </div>
+
 
   </div>
       <script>
+      	const COLOR_CHANGED = "rgba(143, 20, 150, 0.8)"
 
     	var raw_data = {{data|tojson}}
 		// predict_proba
@@ -183,7 +194,7 @@
     			d3.select(this)
     				.transition()
     				.duration(500)
-    				.attr("style","fill: rgb(143, 70, 100);")
+    				.style("fill",COLOR_CHANGED)
 
     			svg.append("text")
     				.attr("class","tmp")
@@ -210,7 +221,7 @@
     			d3.select(this)
     				.transition()
     				.duration(500)
-    				.attr("style","fill: rgb(143, 70, 100);")
+    				.style("fill",COLOR_CHANGED)
 
     			svg.append("text")
     				.attr("class","tmp")
@@ -232,11 +243,20 @@
 
     	// text_view
     	var raw_str = raw_data.raw_str
-    	var feature_view = raw_data.feature_view
     	var span = d3.select(".text_view").append("span")
     		.attr("style","white-space: pre-wrap;")
 
-    	feature_view.sort(function(a,b){
+    	var feature_view = raw_data.feature_view
+    	feature_view.unigram.sort(function(a,b){
+		    if(a[1]<b[1]){
+		        return -1;
+		    }
+		    if(a[1]>b[1]){
+		       return 1;
+		    }
+		    return 0;
+		})
+		feature_view.bigram.sort(function(a,b){
 		    if(a[1]<b[1]){
 		        return -1;
 		    }
@@ -246,56 +266,214 @@
 		    return 0;
 		})
 
-    	var index = 0
-    	var span_text = ""
-    	feature_view.push([0,raw_str.length,0])
-    	if(feature_view[0][1]!=0){
-    		span.append("span")
-    			.attr("style","white-space: pre-wrap;")
-    			.text(raw_str.substring(0,feature_view[0][1]))
-    	}
-    	for (var i = 0; i < feature_view.length-1; i++) {
-    		var word = feature_view[i][0]
-    		var pos = feature_view[i][1]
-    		var weight = feature_view[i][2]
-    		if(weight<0){
-    			style = "background-color: rgba(31, 119, 180,"+ (-weight)/max +");"
-    		}else{
-    			style = "background-color: rgba(255, 127, 14,"+ weight/max +");"
-    		}
-    		span.append("span")
-    			.attr("style",style)
-    			.attr("class","color_span")
-    			.text(word)
-    		span.append("span")
-    			.attr("style","white-space: pre-wrap;")
-    			.text(raw_str.substring(pos+word.length,feature_view[i+1][1]))
-    	}
-
-    	span.selectAll(".color_span")
-    		.data(feature_view)
+		function text_view(d){
+			var index = 0
+	    	var span_text = ""
+	    	d.push([0,raw_str.length,0])
+	    	if(d[0][1]!=0){
+	    		span.append("span")
+	    			.attr("style","white-space: pre-wrap;")
+	    			.text(raw_str.substring(0,d[0][1]))
+	    	}
+	    	for (var i = 0; i < d.length-1; i++) {
+	    		var word = d[i][0]
+	    		var pos = d[i][1]
+	    		var weight = d[i][2]
+	    		if(weight<0){
+	    			style = "background-color: rgba(31, 119, 180,"+ (-weight)/max +");"
+	    		}else{
+	    			style = "background-color: rgba(255, 127, 14,"+ weight/max +");"
+	    		}
+	    		span.append("span")
+	    			.attr("style",style)
+	    			.attr("class","color_span")
+	    			.text(word)
+	    		span.append("span")
+	    			.attr("style","white-space: pre-wrap;")
+	    			.text(raw_str.substring(pos+word.length,d[i+1][1]))
+	    	}
+	    	span.selectAll(".color_span")
+    		.data(d)
     		.on("mouseover",function(d){
-
-	    		style = "background-color: rgb(143, 70, 100);"
     			d3.select(this)
     				.transition()
     				.duration(500)
-    				.attr("style",style);
+    				.style("background-color",COLOR_CHANGED);
 
     		})
     		.on("mouseout",function(d){
     			var weight = d[2]
     			if(weight<0){
-	    			style = "background-color: rgba(31, 119, 180,"+ (-weight)/max +");"
+	    			style = "rgba(31, 119, 180,"+ (-weight)/max +")"
 	    		}else{
-	    			style = "background-color: rgba(255, 127, 14,"+ weight/max +");"
+	    			style = "rgba(255, 127, 14,"+ weight/max +")"
 	    		}
     			d3.select(this)
     				.transition()
     				.duration(500)
-    				.attr("style",style);
+    				.style("background-color",style);
 
     		})
+		}
+
+		text_view(feature_view.unigram)
+		d3.select(".text_view").selectAll(".model_type")
+			.on("click",function(){
+				var model_type = d3.select(this).property("value")
+				span.remove()
+				span = d3.select(".text_view").append("span")
+    				.attr("style","white-space: pre-wrap;")
+				if (model_type == "unigram") {
+					
+					text_view(feature_view.unigram)
+				} else {
+					
+					text_view(feature_view.bigram)
+				}
+
+			})
+    	
+	    // diagram_view
+	   	var features = raw_data.diagram_view
+        // Max radius
+        const MAX_R = 15
+        // Size of svg
+        const WIDTH = 600
+        const HEIGHT = 300
+        const TEXT_STYLE_FRONT = "20px tahoma, sans-serif"
+        const THRESHOLD = 1.0
+        function round3(d){
+            return Math.round(d*1000)/1000
+        }
+    	
+        var svg = d3.select(".scatter_diagram")
+            .select("svg")
+            .attr("width",WIDTH)
+            .attr("height",HEIGHT)
+
+        var maxX = 0
+        var maxY = 0
+        var minY = 99
+        var maxZ = 0
+        for (var i = 0; i < features.length; i++) {
+            if (maxX<Math.abs(features[i][1])) {maxX = Math.abs(features[i][1])}
+            if (maxY<features[i][2]) {maxY = features[i][2]}
+            if (minY>features[i][2]) {minY = features[i][2]}
+            if(maxZ<Math.abs(features[i][3])){maxZ = Math.abs(features[i][3])}
+        }
+
+        var scaleX = d3.scaleLinear()
+            .domain([-maxX,maxX])
+            .range([WIDTH*0.1,WIDTH*0.9]);
+        var scaleY = d3.scaleLinear()
+            .domain([minY,maxY])
+            .range([HEIGHT*0.1,HEIGHT*0.9]);
+        var scaleR = d3.scaleLinear()
+            .domain([0,maxZ])
+            .range([0,MAX_R]);
+
+        var circles = svg.selectAll("circle")
+            .data(features)
+            .enter()
+            .append("circle")
+            .attr("cx",function(d){
+                return scaleX(d[1]);
+            })
+            .attr("cy",function(d){
+                return scaleY(d[2]);
+            })
+            .attr("r",function(d){
+                return scaleR(Math.abs(d[3]));
+            })
+            .style("fill",function(d){
+                opacity = scaleR(Math.abs(d[3]))/(MAX_R*THRESHOLD)
+                if (d[3]>0) {
+                    return "rgba(255,127,14,"+opacity+")"
+                }
+                else{
+                    return "rgba(31,119,180,"+opacity+")"
+                }
+            })
+            .on("mouseover",function(d){
+                svg.append("text")
+                    .attr("class","token_info")
+                    .attr("x",scaleX(d[1])+10)
+                    .attr("y",scaleY(d[2])-5)
+                    .style("font",TEXT_STYLE_FRONT)
+                    .attr("fill",COLOR_CHANGED)
+                    .text(d[0])
+
+                svg.append("text")
+                    .attr("class","token_info")
+                    .attr("x",0.03*WIDTH)
+                    .attr("y",0.94*HEIGHT)
+                    .style("font",TEXT_STYLE_FRONT)
+                    .text(d[0])
+
+                svg.append("text")
+                    .attr("class","token_info")
+                    .attr("x",0.03*WIDTH)
+                    .attr("y",HEIGHT)
+                    .style("font",TEXT_STYLE_FRONT)
+                    .text("idf:"+round3(d[1])+" weight:"+round3(d[3])+" total:"+round3(d[3]))
+
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style("fill",COLOR_CHANGED)
+            })
+            .on("mouseout",function(d){
+                opacity = scaleR(Math.abs(d[3]))/5
+                var fill = ""
+                if (d[3]>0) {
+                    fill = "rgba(255,127,14,"+opacity+")"
+                }
+                else{
+                    fill = "rgba(31,119,180,"+opacity+")"
+                }
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style("fill",fill);
+
+                svg.selectAll(".token_info")
+                    .remove()
+            })
+
+        // var tokens = svg.selectAll("text")
+        //     .data(raw_data)
+        //     .enter()
+        //     .append("text",function(d){return d[0]})
+        //     .attr("id",function(d,i){return "id_"+i})
+        //     .attr("class","tokens")
+        //     .attr("x",function(d){return scaleX(d[1])+10})
+        //     .attr("y",function(d){return scaleY(d[2])-5})
+        //     .style("font",TEXT_STYLE_FRONT)
+        //     .text(function(d){return d[0]})
+        //     .style("display","none")
+
+
+        var xAxis = d3.axisBottom(scaleX).ticks(4)
+        svg.append("g")
+            .call(xAxis)
+
+        var yAxis = d3.axisRight(scaleY).ticks(4)
+        svg.append("g")
+            .call(yAxis)
+
+        svg.append("text")
+            .attr("x",0.5*WIDTH)
+            .attr("y",0.1*HEIGHT)
+            .attr("text-anchor","middle")
+            .style("font","15px tahoma, sans-serif")
+            .text("coeff")
+
+        svg.append("text")
+            .attr("x",0.05*WIDTH)
+            .attr("y",0.5*HEIGHT)
+            .attr("text-anchor","middle")
+            .style("font","15px tahoma, sans-serif")
+            .text("idf")
 
     	
     </script>
