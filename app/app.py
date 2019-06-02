@@ -143,8 +143,8 @@ def upload():
   bigram_weights, filtered = get_feature_weights(raw, lower_nopunc, raw_nopunc, cls, tfidf, 2)
   res['feature_weights'] = unigram_weights
   res['feature_view'] = get_feature_view(raw, unigram_weights)
-  res['feature_weights'] = bigram_weights
-  res['feature_view'] = get_feature_view(raw, filtered)
+  # res['feature_weights'] = bigram_weights
+  # res['feature_view'] = get_feature_view(raw, filtered)
   res['raw_str'] = raw
 #   res['feature_weights'] = {
 #       'unigram': unigram_weights,
