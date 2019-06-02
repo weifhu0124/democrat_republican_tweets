@@ -52,9 +52,6 @@
   </div>
       <script>
 
-    	// var text_data = '{"class_name":["republican", "democrat"],"class_proba":[0.9, 0.1],"feature_weights":[["TaxReform", -0.020770347480948175], ["FoxBusiness to discuss", -0.017348559557315277],["FoxBusiness", -0.017348559557315277], ["Chairman", -0.016276587467941726], ["FoxNews", -0.014993825621698636], ["RepKevinBrady", -0.00954154749073416], ["https", 0.007872493594009546], ["highlights", -0.004874949990182821], ["benefits", -0.004290721079843876], ["the", 0.001588871746664454], ["and", -0.0015407369063189303]],"feature_view":[["TaxReform", 81, -0.020770347480948175],  ["FoxBusiness to discuss", 41, -0.017348559557315277],  ["Chairman", 0, -0.016276587467941726], ["FoxNews", 28, -0.014993825621698636], ["RepKevinBrady", 10, -0.00954154749073416], ["https", 111, 0.007872493594009546], ["highlights", 97, -0.004874949990182821], ["benefits", 68, -0.004290721079843876], ["the", 64, 0.001588871746664454], ["and", 36, -0.0015407369063189303]],"raw_str":"Chairman @RepKevinBrady on @FoxNews and @FoxBusiness to discuss the benefits of #TaxReform. Some highlights \u2b07\ufe0f https://t.co/urDcaXeWjF","dataset":[ 30 , 10 , 43 , 55 , 13 ]}'
-    	// var raw_data = JSON.parse(text_data)
-
     	var raw_data = {{data|tojson}}
 		// predict_proba
     	d3.select(".predict_proba")
@@ -252,6 +249,11 @@
     	var index = 0
     	var span_text = ""
     	feature_view.push([0,raw_str.length,0])
+    	if(feature_view[0][1]!=0){
+    		span.append("span")
+    			.attr("style","white-space: pre-wrap;")
+    			.text(raw_str.substring(0,feature_view[0][1]))
+    	}
     	for (var i = 0; i < feature_view.length-1; i++) {
     		var word = feature_view[i][0]
     		var pos = feature_view[i][1]
@@ -280,16 +282,6 @@
     				.duration(500)
     				.attr("style",style);
 
-    			// d3.select(".text_view")
-    			// 	// .select("svg")
-    			// 	.append("text")
-    			// 	.attr("class","tmp")
-    			// 	.attr("x",10)
-	    		// 	.attr("y",20)
-	    		// 	.attr("fill","black")
-	    		// 	.attr("text-anchor","start")
-	    		// 	.attr("style","font: 14px tahoma, sans-serif;")
-    			// 	.text(d[0]+":"+Math.round(d[2]*1000)/1000);
     		})
     		.on("mouseout",function(d){
     			var weight = d[2]
@@ -303,8 +295,6 @@
     				.duration(500)
     				.attr("style",style);
 
-    			// d3.selectAll(".tmp")
-    			// 	.remove()
     		})
 
     	
