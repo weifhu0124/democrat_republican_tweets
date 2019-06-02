@@ -100,9 +100,16 @@ def remove_overlap(weights, lower_nopunc, raw, raw_nopunc):
           result.pop()
   return result
 
-
-def get_feature_weights_total(lower_nopunc, raw_nopunc, cls, tfidf):
-  pass
+def get_diagram_view(cls, tfidf, weights):
+  result = []
+  vocab = tfidf.vocabulary_
+  coef = cls.coef_[0]
+  for weight in weights:
+    token = weight[0].lower()
+    idx = vocab[token]
+    tmp = [token, coef[idx], tfidf.idf_[idx], weight[1]]
+    result.append(tmp)
+  return result
 
 def get_feature_view(raw, weights):
   view = []
@@ -152,25 +159,34 @@ def upload():
   res['class_proba'] = get_class_proba(lower_nopunc, cls, tfidf)
   unigram_weights, _ = get_feature_weights(raw, lower_nopunc, raw_nopunc, cls, tfidf, 1)
   bigram_weights, filtered = get_feature_weights(raw, lower_nopunc, raw_nopunc, cls, tfidf, 2)
-  res['feature_weights'] = unigram_weights
-  res['feature_view'] = get_feature_view(raw, unigram_weights)
+  # res['feature_weights'] = unigram_weights
+  # res['feature_view'] = get_feature_view(raw, unigram_weights)
   # res['feature_weights'] = bigram_weights
   # res['feature_view'] = get_feature_view(raw, filtered)
   res['raw_str'] = raw
-#   res['feature_weights'] = {
-#       'unigram': unigram_weights,
-#       'bigram': bigram_weights
-#   }
-
+  res['feature_weights'] = unigram_weights + bigram_weights
+  res['feature_view'] = {
+    'unigram': get_feature_view(raw, unigram_weights),
+    'bigram': get_feature_view(raw, filtered)
+  }
+  digram_unigram = get_diagram_view(cls, tfidf, unigram_weights)
+  digram_bigram = get_diagram_view(cls, tfidf, filtered)
+  res['diagram_view'] = {
+    'unigram': digram_unigram,
+    'bigram': digram_bigram
+  }
+  print(res)
+  
+  # [token, coeff, idf , weight], ...]
   # res['feature_view'] = get_feature_view(text)
   # [[word, char starting index, weight]]
   # res['class_proba'] = [0.9, 0.1]
   # res['feature_weights'] = [["TaxReform", -0.020770347480948175], ["FoxBusiness", -0.017348559557315277], ["Chairman", -0.016276587467941726], ["FoxNews", -0.014993825621698636], ["RepKevinBrady", -0.00954154749073416], ["https", 0.007872493594009546], ["highlights", -0.004874949990182821], ["benefits", -0.004290721079843876], ["the", 0.001588871746664454], ["and", -0.0015407369063189303]]
   # res['feature_view'] = [["#Tax Reform", 81, -0.020770347480948175], ["FoxBusiness", 41, -0.017348559557315277], ["Chairman", 0, -0.016276587467941726], ["FoxNews", 28, -0.014993825621698636], ["RepKevinBrady", 10, -0.00954154749073416], ["https", 111, 0.007872493594009546], ["highlights", 97, -0.004874949990182821], ["benefits", 68, -0.004290721079843876], ["the", 64, 0.001588871746664454], ["and", 36, -0.0015407369063189303]]
   # res['raw_str']="Chairman @RepKevinBrady on @FoxNews and @FoxBusiness to discuss the benefits of #TaxReform. Some highlights \u2b07\ufe0f https://t.co/urDcaXeWjF"
-  for v in res['feature_weights']:
-    print(v)
-  print(res)
+  # for v in res['feature_weights']:
+  #   print(v)
+  # print(res)
   return render_template("mylime.html", data = res, text = raw)
 
 if __name__ == '__main__':
