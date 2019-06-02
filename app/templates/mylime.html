@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <title>testD3_chp10_1.html</title>
+
+    <script type="text/javascript" src="http://d3js.org/d3.v5.min.js">
+
+	</script>
+
+  </head>
+
+  
+
+  <body>
+  <div>
+      <div class = "predict_proba">
+	  	<svg style = "width: 100%; height: :79px;">
+	    	<text x="20" y="20">Prediction probabilities</text>
+	    	<g>
+
+	    		<rect x="120" y="35" height="17" width="46" style="fill: rgb(31, 119, 180);" class = "class_rect"></rect>
+	    		<rect x="120" y="35" height="17" width="92" fill-opacity="0" stroke="black"></rect>
+	    		<text class="prob_text" y="49" fill="black" style="font: 14px tahoma, sans-serif;"></text>
+	    		<text x="218" y="49" fill="black" style="font: 14px tahoma, sans-serif;" class = "class_proba">class1_proba</text>
+	    		<text x="110" y="49" fill="black" text-anchor="end" style="font: 14px tahoma, sans-serif;" class = "class_name">class1_name</text>
+	    		<rect x="120" y="57" height="17" width="46" style="fill: rgb(255, 127, 14);" class = "class_rect"></rect>
+	    		<rect x="120" y="57" height="17" width="92" fill-opacity="0" stroke="black"></rect>
+	    		<text class="prob_text" y="71" fill="black" style="font: 14px tahoma, sans-serif;"></text>
+	    		<text x="125" y="71" fill="black" style="font: 14px tahoma, sans-serif;" class = "class_proba">class2_proba</text>
+	    		<text x="110" y="71" fill="black" text-anchor="end" style="font: 14px tahoma, sans-serif;"  class = "class_name">class2_name</text>
+	    	</g>
+	    </svg>
+	  </div>
+
+	  <div class = "explanation">
+	  	<svg style="width: 100%; height: 310px;">
+	  		<text class="class_name" x="260.25" y="15" font-size="20" text-anchor="middle" style="fill: rgb(31, 119, 180);">class_name</text>
+	  		<text class="class_name" x="380.75" y="15" font-size="20" text-anchor="middle" style="fill: rgb(255, 127, 14);">class_name</text>
+	  		<line x1="320.5" x2="320.5" y1="40" y2="310" style="stroke-width: 1; stroke: black;"></line>
+
+	  	</svg>
+	  </div>
+
+	  <div class = "text_view">
+	  	<h3>Text with highlighted words</h3>
+
+	  </div>
+
+  </div>
+      <script>
+
+    	// var text_data = '{"class_name":["republican", "democrat"],"class_proba":[0.9, 0.1],"feature_weights":[["TaxReform", -0.020770347480948175], ["FoxBusiness to discuss", -0.017348559557315277],["FoxBusiness", -0.017348559557315277], ["Chairman", -0.016276587467941726], ["FoxNews", -0.014993825621698636], ["RepKevinBrady", -0.00954154749073416], ["https", 0.007872493594009546], ["highlights", -0.004874949990182821], ["benefits", -0.004290721079843876], ["the", 0.001588871746664454], ["and", -0.0015407369063189303]],"feature_view":[["TaxReform", 81, -0.020770347480948175],  ["FoxBusiness to discuss", 41, -0.017348559557315277],  ["Chairman", 0, -0.016276587467941726], ["FoxNews", 28, -0.014993825621698636], ["RepKevinBrady", 10, -0.00954154749073416], ["https", 111, 0.007872493594009546], ["highlights", 97, -0.004874949990182821], ["benefits", 68, -0.004290721079843876], ["the", 64, 0.001588871746664454], ["and", 36, -0.0015407369063189303]],"raw_str":"Chairman @RepKevinBrady on @FoxNews and @FoxBusiness to discuss the benefits of #TaxReform. Some highlights \u2b07\ufe0f https://t.co/urDcaXeWjF","dataset":[ 30 , 10 , 43 , 55 , 13 ]}'
+    	// var raw_data = JSON.parse(text_data)
+
+    	var raw_data = {{data|tojson}}
+		// predict_proba
+    	d3.select(".predict_proba")
+    		.selectAll(".class_rect")
+    		.data(raw_data.class_proba)
+    		.attr("width",function(d){
+    			return d*92
+    		})
+
+    	d3.select(".predict_proba")
+    		.selectAll(".class_proba")
+    		.data(raw_data.class_proba)
+    		.attr("x",function(d){
+    			return 122+d*92
+    		})
+    		.text(function(d){return d})
+
+    	d3.select(".predict_proba")
+    		.selectAll(".class_name")
+    		.data(raw_data.class_name)
+    		.text(function(d){return d})
+
+    	// explanation
+    	d3.select(".explanation")
+    		.selectAll(".class_name")
+    		.data(raw_data.class_name)
+    		.text(function(d){return d})
+
+    	var svg = d3.select(".explanation").select("svg")
+
+    	var positive_features = new Array()
+    	var negative_features = new Array()
+    	var max = 0.0
+    	var min = 1.0
+    	for (var i = raw_data.feature_weights.length - 1; i >= 0; i--) {
+    		var feature = raw_data.feature_weights[i]
+    		if(feature[1]>0){
+    			positive_features.push(feature)
+    			if(feature[1]>max){max = feature[1]}
+    			if(feature[1]<min){min = feature[1]}
+    		}
+    		else{
+    			negative_features.push(feature)
+    			if(-feature[1]>max){max = -feature[1]}
+    			if(-feature[1]<min){min = -feature[1]}
+    		}		
+    	}
+
+    	var num = negative_features.length
+    	if (positive_features.length>num){
+    		num = positive_features.length
+    	}
+    	svg.select("line").attr("y2",30+20*(num+1))
+
+    	positive_features.sort(function(a,b){
+		    if(a[1]<b[1]){
+		        return 1;
+		    }
+		    if(a[1]>b[1]){
+		       return -1;
+		    }
+		    return 0;
+		})
+
+		negative_features.sort(function(a,b){
+		    if(a[1]<b[1]){
+		        return -1;
+		    }
+		    if(a[1]>b[1]){
+		       return 1;
+		    }
+		    return 0;
+		})
+
+		var xScale = d3.scaleLinear()
+			.domain([-max,max])
+			.range([-100,100])
+		var xAxis = d3.axisTop(xScale).ticks(4)
+		svg.append("g")
+			.attr("transform","translate(320,40)")
+			.call(xAxis)
+
+		var scaleLinear = d3.scaleLinear()
+    		.domain([0,max])
+    		.range([0,100]);
+    	for (var i = 0; i < positive_features.length; i++) {
+    		var word = positive_features[i][0]
+    		var weight = positive_features[i][1]
+    		var width = scaleLinear(weight)
+    		svg.append("rect")
+    			.attr("class","positive_rect")
+    			.attr("x",322)
+    			.attr("y",45+20*i)
+    			.attr("height",17)
+    			.attr("width",width)
+    			.attr("style","fill:rgb(255,127,14)")
+    		svg.append("text")
+    			.attr("x",323+width)
+    			.attr("y",59+20*i)
+    			.attr("fill","black")
+    			.attr("text-anchor","start")
+    			.attr("style","font: 14px tahoma, sans-serif;")
+    			.text(word)
+    	}
+
+    	for (var i = 0; i < negative_features.length; i++) {
+    		var word = negative_features[i][0]
+    		var weight = -negative_features[i][1]
+    		var width = scaleLinear(weight)
+    		svg.append("rect")
+    			.attr("class","negative_rect")
+    			.attr("x",319-width)
+    			.attr("y",45+20*i)
+    			.attr("height",17)
+    			.attr("width",width)
+    			.attr("style","fill:rgb(31,119,180)")
+    		svg.append("text")
+    			.attr("x",318-width)
+    			.attr("y",59+20*i)
+    			.attr("fill","black")
+    			.attr("text-anchor","end")
+    			.attr("style","font: 14px tahoma, sans-serif;")
+    			.text(word)
+    	}
+    	
+    	svg.selectAll(".positive_rect")
+    		.data(positive_features)
+    		.on("mouseover",function(d){
+    			d3.select(this)
+    				.transition()
+    				.duration(500)
+    				.attr("style","fill: rgb(143, 70, 100);")
+
+    			svg.append("text")
+    				.attr("class","tmp")
+    				.attr("x",10)
+	    			.attr("y",20)
+	    			.attr("fill","black")
+	    			.attr("text-anchor","start")
+	    			.attr("style","font: 14px tahoma, sans-serif;")
+    				.text(d[0]+":"+Math.round(d[1]*1000)/1000);
+    		})
+    		.on("mouseout",function(){
+    			d3.select(this)
+    				.transition()
+    				.duration(500)
+    				.attr("style","fill: rgb(255, 127, 14);");
+    			svg.select(".tmp")
+    				.remove()
+    		})
+
+
+    	svg.selectAll(".negative_rect")
+    		.data(negative_features)
+    		.on("mouseover",function(d){
+    			d3.select(this)
+    				.transition()
+    				.duration(500)
+    				.attr("style","fill: rgb(143, 70, 100);")
+
+    			svg.append("text")
+    				.attr("class","tmp")
+    				.attr("x",10)
+	    			.attr("y",20)
+	    			.attr("fill","black")
+	    			.attr("text-anchor","start")
+	    			.attr("style","font: 14px tahoma, sans-serif;")
+    				.text(d[0]+":"+Math.round(d[1]*1000)/1000);
+    		})
+    		.on("mouseout",function(){
+    			d3.select(this)
+    				.transition()
+    				.duration(500)
+    				.attr("style","fill: rgb(31, 119, 180);");
+    			svg.select(".tmp")
+    				.remove()
+    		})
+
+    	// text_view
+    	var raw_str = raw_data.raw_str
+    	var feature_view = raw_data.feature_view
+    	var span = d3.select(".text_view").append("span")
+    		.attr("style","white-space: pre-wrap;")
+
+    	feature_view.sort(function(a,b){
+		    if(a[1]<b[1]){
+		        return -1;
+		    }
+		    if(a[1]>b[1]){
+		       return 1;
+		    }
+		    return 0;
+		})
+
+    	var index = 0
+    	var span_text = ""
+    	feature_view.push([0,raw_str.length,0])
+    	for (var i = 0; i < feature_view.length-1; i++) {
+    		var word = feature_view[i][0]
+    		var pos = feature_view[i][1]
+    		var weight = feature_view[i][2]
+    		if(weight<0){
+    			style = "background-color: rgba(31, 119, 180,"+ (-weight)/max +");"
+    		}else{
+    			style = "background-color: rgba(255, 127, 14,"+ weight/max +");"
+    		}
+    		span.append("span")
+    			.attr("style",style)
+    			.attr("class","color_span")
+    			.text(word)
+    		span.append("span")
+    			.attr("style","white-space: pre-wrap;")
+    			.text(raw_str.substring(pos+word.length,feature_view[i+1][1]))
+    	}
+
+    	span.selectAll(".color_span")
+    		.data(feature_view)
+    		.on("mouseover",function(d){
+
+	    		style = "background-color: rgb(143, 70, 100);"
+    			d3.select(this)
+    				.transition()
+    				.duration(500)
+    				.attr("style",style);
+
+    			// d3.select(".text_view")
+    			// 	// .select("svg")
+    			// 	.append("text")
+    			// 	.attr("class","tmp")
+    			// 	.attr("x",10)
+	    		// 	.attr("y",20)
+	    		// 	.attr("fill","black")
+	    		// 	.attr("text-anchor","start")
+	    		// 	.attr("style","font: 14px tahoma, sans-serif;")
+    			// 	.text(d[0]+":"+Math.round(d[2]*1000)/1000);
+    		})
+    		.on("mouseout",function(d){
+    			var weight = d[2]
+    			if(weight<0){
+	    			style = "background-color: rgba(31, 119, 180,"+ (-weight)/max +");"
+	    		}else{
+	    			style = "background-color: rgba(255, 127, 14,"+ weight/max +");"
+	    		}
+    			d3.select(this)
+    				.transition()
+    				.duration(500)
+    				.attr("style",style);
+
+    			// d3.selectAll(".tmp")
+    			// 	.remove()
+    		})
+
+    	
+    </script>
+
+  </body>
+
+</html>
