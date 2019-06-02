@@ -91,7 +91,9 @@
     		.data(raw_data.class_name)
     		.text(function(d){return d})
 
-    	var svg = d3.select(".explanation").select("svg")
+    	var svg_exp = d3.select(".explanation")
+    		.select("svg")
+    		.attr("transform","translate(-50,0)")
 
     	var positive_features = new Array()
     	var negative_features = new Array()
@@ -115,7 +117,8 @@
     	if (positive_features.length>num){
     		num = positive_features.length
     	}
-    	svg.select("line").attr("y2",30+20*(num+1))
+    	svg_exp.attr("height",100+20*(num+1))
+    	svg_exp.select("line").attr("y2",30+20*(num+1))
 
     	positive_features.sort(function(a,b){
 		    if(a[1]<b[1]){
@@ -141,7 +144,7 @@
 			.domain([-max,max])
 			.range([-100,100])
 		var xAxis = d3.axisTop(xScale).ticks(4)
-		svg.append("g")
+		svg_exp.append("g")
 			.attr("transform","translate(320,40)")
 			.call(xAxis)
 
@@ -152,14 +155,14 @@
     		var word = positive_features[i][0]
     		var weight = positive_features[i][1]
     		var width = scaleLinear(weight)
-    		svg.append("rect")
+    		svg_exp.append("rect")
     			.attr("class","positive_rect")
     			.attr("x",322)
     			.attr("y",45+20*i)
     			.attr("height",17)
     			.attr("width",width)
     			.attr("style","fill:rgb(255,127,14)")
-    		svg.append("text")
+    		svg_exp.append("text")
     			.attr("x",323+width)
     			.attr("y",59+20*i)
     			.attr("fill","black")
@@ -172,14 +175,14 @@
     		var word = negative_features[i][0]
     		var weight = -negative_features[i][1]
     		var width = scaleLinear(weight)
-    		svg.append("rect")
+    		svg_exp.append("rect")
     			.attr("class","negative_rect")
     			.attr("x",319-width)
     			.attr("y",45+20*i)
     			.attr("height",17)
     			.attr("width",width)
     			.attr("style","fill:rgb(31,119,180)")
-    		svg.append("text")
+    		svg_exp.append("text")
     			.attr("x",318-width)
     			.attr("y",59+20*i)
     			.attr("fill","black")
@@ -188,7 +191,7 @@
     			.text(word)
     	}
     	
-    	svg.selectAll(".positive_rect")
+    	svg_exp.selectAll(".positive_rect")
     		.data(positive_features)
     		.on("mouseover",function(d){
     			d3.select(this)
@@ -196,10 +199,11 @@
     				.duration(500)
     				.style("fill",COLOR_CHANGED)
 
-    			svg.append("text")
+    			svg_exp.append("text")
     				.attr("class","tmp")
     				.attr("x",10)
 	    			.attr("y",20)
+	    			.attr("transform","translate(50,"+20*(num+2)+")")
 	    			.attr("fill","black")
 	    			.attr("text-anchor","start")
 	    			.attr("style","font: 14px tahoma, sans-serif;")
@@ -210,12 +214,12 @@
     				.transition()
     				.duration(500)
     				.attr("style","fill: rgb(255, 127, 14);");
-    			svg.select(".tmp")
+    			svg_exp.select(".tmp")
     				.remove()
     		})
 
 
-    	svg.selectAll(".negative_rect")
+    	svg_exp.selectAll(".negative_rect")
     		.data(negative_features)
     		.on("mouseover",function(d){
     			d3.select(this)
@@ -223,21 +227,22 @@
     				.duration(500)
     				.style("fill",COLOR_CHANGED)
 
-    			svg.append("text")
+    			svg_exp.append("text")
     				.attr("class","tmp")
     				.attr("x",10)
 	    			.attr("y",20)
+	    			.attr("transform","translate(50,"+20*(num+2)+")")
 	    			.attr("fill","black")
 	    			.attr("text-anchor","start")
 	    			.attr("style","font: 14px tahoma, sans-serif;")
-    				.text(d[0]+":"+Math.round(d[1]*1000)/1000);
+    				.text(d[0]+":"+round3(d[1]));
     		})
     		.on("mouseout",function(){
     			d3.select(this)
     				.transition()
     				.duration(500)
     				.attr("style","fill: rgb(31, 119, 180);");
-    			svg.select(".tmp")
+    			svg_exp.select(".tmp")
     				.remove()
     		})
 
@@ -346,7 +351,7 @@
             return Math.round(d*1000)/1000
         }
     	
-        var svg = d3.select(".scatter_diagram")
+        var svg_dgm = d3.select(".scatter_diagram")
             .select("svg")
             .attr("width",WIDTH)
             .attr("height",HEIGHT)
@@ -372,7 +377,7 @@
             .domain([0,maxZ])
             .range([0,MAX_R]);
 
-        var circles = svg.selectAll("circle")
+        var circles = svg_dgm.selectAll("circle")
             .data(features)
             .enter()
             .append("circle")
@@ -395,7 +400,7 @@
                 }
             })
             .on("mouseover",function(d){
-                svg.append("text")
+                svg_dgm.append("text")
                     .attr("class","token_info")
                     .attr("x",scaleX(d[1])+10)
                     .attr("y",scaleY(d[2])-5)
@@ -403,19 +408,19 @@
                     .attr("fill",COLOR_CHANGED)
                     .text(d[0])
 
-                svg.append("text")
+                svg_dgm.append("text")
                     .attr("class","token_info")
                     .attr("x",0.03*WIDTH)
                     .attr("y",0.94*HEIGHT)
                     .style("font",TEXT_STYLE_FRONT)
                     .text(d[0])
 
-                svg.append("text")
+                svg_dgm.append("text")
                     .attr("class","token_info")
                     .attr("x",0.03*WIDTH)
                     .attr("y",HEIGHT)
                     .style("font",TEXT_STYLE_FRONT)
-                    .text("idf:"+round3(d[1])+" weight:"+round3(d[3])+" total:"+round3(d[3]))
+                    .text("idf:"+round3(d[1])+" coeff:"+round3(d[2])+" weight:"+round3(d[3]))
 
                 d3.select(this)
                     .transition()
@@ -436,7 +441,7 @@
                     .duration(300)
                     .style("fill",fill);
 
-                svg.selectAll(".token_info")
+                svg_dgm.selectAll(".token_info")
                     .remove()
             })
 
@@ -454,21 +459,21 @@
 
 
         var xAxis = d3.axisBottom(scaleX).ticks(4)
-        svg.append("g")
+        svg_dgm.append("g")
             .call(xAxis)
 
         var yAxis = d3.axisRight(scaleY).ticks(4)
-        svg.append("g")
+        svg_dgm.append("g")
             .call(yAxis)
 
-        svg.append("text")
+        svg_dgm.append("text")
             .attr("x",0.5*WIDTH)
             .attr("y",0.1*HEIGHT)
             .attr("text-anchor","middle")
             .style("font","15px tahoma, sans-serif")
             .text("coeff")
 
-        svg.append("text")
+        svg_dgm.append("text")
             .attr("x",0.05*WIDTH)
             .attr("y",0.5*HEIGHT)
             .attr("text-anchor","middle")
