@@ -249,7 +249,7 @@
     	// text_view
     	var raw_str = raw_data.raw_str
     	var span = d3.select(".text_view").append("span")
-    		.attr("style","white-space: pre-wrap;")
+    			.attr("style","white-space: pre-wrap;")
 
     	var feature_view = raw_data.feature_view
     	feature_view.unigram.sort(function(a,b){
@@ -270,11 +270,14 @@
 		    }
 		    return 0;
 		})
+		feature_view.unigram.push([0,raw_str.length,0])
+		feature_view.bigram.push([0,raw_str.length,0])
 
 		function text_view(d){
+			
+			span.selectAll("span").remove()
 			var index = 0
 	    	var span_text = ""
-	    	d.push([0,raw_str.length,0])
 	    	if(d[0][1]!=0){
 	    		span.append("span")
 	    			.attr("style","white-space: pre-wrap;")
@@ -284,6 +287,7 @@
 	    		var word = d[i][0]
 	    		var pos = d[i][1]
 	    		var weight = d[i][2]
+	    		console.log(word+":"+pos)
 	    		if(weight<0){
 	    			style = "background-color: rgba(31, 119, 180,"+ (-weight)/max +");"
 	    		}else{
@@ -319,21 +323,20 @@
     				.style("background-color",style);
 
     		})
+    		return span
 		}
 
 		text_view(feature_view.unigram)
 		d3.select(".text_view").selectAll(".model_type")
 			.on("click",function(){
 				var model_type = d3.select(this).property("value")
-				span.remove()
-				span = d3.select(".text_view").append("span")
-    				.attr("style","white-space: pre-wrap;")
+				
 				if (model_type == "unigram") {
 					
-					text_view(feature_view.unigram)
+					span = text_view(feature_view.unigram)
 				} else {
 					
-					text_view(feature_view.bigram)
+					span = text_view(feature_view.bigram)
 				}
 
 			})
