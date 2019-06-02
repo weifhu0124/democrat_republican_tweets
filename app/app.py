@@ -169,12 +169,9 @@ def upload():
     'unigram': get_feature_view(raw, unigram_weights),
     'bigram': get_feature_view(raw, filtered)
   }
-  digram_unigram = get_diagram_view(cls, tfidf, unigram_weights+filtered)
+  digram_view = get_diagram_view(cls, tfidf, unigram_weights+filtered)
   # digram_bigram = get_diagram_view(cls, tfidf, filtered)
-  res['diagram_view'] = {
-    'unigram': digram_unigram,
-    'bigram': digram_bigram
-  }
+  res['diagram_view'] = digram_view
   print(res)
   
   # [token, coeff, idf , weight], ...]
