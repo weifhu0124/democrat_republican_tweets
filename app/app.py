@@ -48,9 +48,20 @@ def get_feature_weights(raw, lower_nopunc, raw_nopunc, cls, tfidf, gram_length):
   if gram_length > 1:
     filtered = remove_overlap(weights, lower_nopunc, raw, raw_nopunc)
     print("filtered", filtered)
+  else:
+    weights = remove_duplicate(weights)
 
   weights.sort(key = lambda x:abs(x[1]), reverse=True)
   return weights, filtered
+
+def remove_duplicate(weights):
+  added = set()
+  result = []
+  for weight in weights:
+    if weight[0] not in added:
+      added.add(weight[0])
+      result.append(weight)
+  return result
 
 def remove_overlap(weights, lower_nopunc, raw, raw_nopunc):
   trigrams = set(everygrams(raw_nopunc.split(), 3, 3))
@@ -157,8 +168,8 @@ def upload():
   # res['feature_weights'] = [["TaxReform", -0.020770347480948175], ["FoxBusiness", -0.017348559557315277], ["Chairman", -0.016276587467941726], ["FoxNews", -0.014993825621698636], ["RepKevinBrady", -0.00954154749073416], ["https", 0.007872493594009546], ["highlights", -0.004874949990182821], ["benefits", -0.004290721079843876], ["the", 0.001588871746664454], ["and", -0.0015407369063189303]]
   # res['feature_view'] = [["#Tax Reform", 81, -0.020770347480948175], ["FoxBusiness", 41, -0.017348559557315277], ["Chairman", 0, -0.016276587467941726], ["FoxNews", 28, -0.014993825621698636], ["RepKevinBrady", 10, -0.00954154749073416], ["https", 111, 0.007872493594009546], ["highlights", 97, -0.004874949990182821], ["benefits", 68, -0.004290721079843876], ["the", 64, 0.001588871746664454], ["and", 36, -0.0015407369063189303]]
   # res['raw_str']="Chairman @RepKevinBrady on @FoxNews and @FoxBusiness to discuss the benefits of #TaxReform. Some highlights \u2b07\ufe0f https://t.co/urDcaXeWjF"
-  # for v in res['feature_view']:
-  #   print(v)
+  for v in res['feature_weights']:
+    print(v)
   print(res)
   return render_template("mylime.html", data = res, text = raw)
 
