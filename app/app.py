@@ -65,10 +65,7 @@ def remove_overlap(weights, lower_nopunc, raw, raw_nopunc):
     for w in weights:
       t = w[0]
       tList = t.split(' ')
-      # print(currList[1], tList[0])
-      # print((currList[0], currList[1], tList[1]))
       if currList[1] == tList[0] and (currList[0], currList[1], tList[1]) in trigrams:
-        # print(weight, w)
         if abs(weight[1]) > abs(w[1]):
           if weight[0] in raw:
             if w[0] not in added:
@@ -83,32 +80,13 @@ def remove_overlap(weights, lower_nopunc, raw, raw_nopunc):
           else:
             if w[0] not in added:
               res = [weight[0], weight[1]]
-      
-        #   res = [weight[0], weight[1]]
-        # elif abs(weight[1]) < abs(w[1]):
-        #   res = [w[0], w[1]]
-       
-        # res = [weight[0], weight[1]] if abs(weight[1]) > abs(w[1]) and weight[0] in raw else [w[0], w[1]]
+  
     if res[0] not in added and res[0] in raw:
       added.add(res[0])
       result.append(res)
       for r in result:
         if res[0].split(' ')[0] == r[0].split(' ')[1]:
           result.pop()
-    # if flag:
-    #   result.append(res)
-          
-    # if res[0] not in added:
-    #   print(res, added)
-    #   if not result:
-    #     result.append(res)
-    #   else:
-    #     for r in result:
-    #       print("###", res[0].split(' '), r[0].split(' '))
-    #       if res[0].split(' ')[0] != r[0].split(' ')[1]:
-    #         pdb.set_trace()
-    #         result.append(res)
-    #         added.add(res[0])
   return result
 
 
@@ -176,9 +154,9 @@ def upload():
   # res['feature_weights'] = [["TaxReform", -0.020770347480948175], ["FoxBusiness", -0.017348559557315277], ["Chairman", -0.016276587467941726], ["FoxNews", -0.014993825621698636], ["RepKevinBrady", -0.00954154749073416], ["https", 0.007872493594009546], ["highlights", -0.004874949990182821], ["benefits", -0.004290721079843876], ["the", 0.001588871746664454], ["and", -0.0015407369063189303]]
   # res['feature_view'] = [["#Tax Reform", 81, -0.020770347480948175], ["FoxBusiness", 41, -0.017348559557315277], ["Chairman", 0, -0.016276587467941726], ["FoxNews", 28, -0.014993825621698636], ["RepKevinBrady", 10, -0.00954154749073416], ["https", 111, 0.007872493594009546], ["highlights", 97, -0.004874949990182821], ["benefits", 68, -0.004290721079843876], ["the", 64, 0.001588871746664454], ["and", 36, -0.0015407369063189303]]
   # res['raw_str']="Chairman @RepKevinBrady on @FoxNews and @FoxBusiness to discuss the benefits of #TaxReform. Some highlights \u2b07\ufe0f https://t.co/urDcaXeWjF"
-  print(res)
   # for v in res['feature_view']:
   #   print(v)
+  print(res)
   return render_template("mylime.html", data = res, text = raw)
 
 if __name__ == '__main__':
