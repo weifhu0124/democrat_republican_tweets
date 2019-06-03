@@ -113,11 +113,14 @@ def get_diagram_view(cls, tfidf, weights):
 
 def get_feature_view(raw, weights):
   view = []
+  added = set()
   for weight in weights:
     token, weight = weight[0], weight[1]
     indices = [s.start() for s in re.finditer(token, raw)] # find all starting char indices of token
     for idx in indices:
-      view.append([token, idx, weight])
+      if token not in added:
+        added.add(token)
+        view.append([token, idx, weight])
   return view
 
 @app.route('/')
