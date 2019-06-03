@@ -118,7 +118,7 @@
                     .attr("x",0.03*WIDTH)
                     .attr("y",HEIGHT)
                     .style("font",TEXT_STYLE_FRONT)
-                    .text("idf:"+round3(d[1])+" weight:"+round3(d[3])+" total:"+round3(d[3]))
+                    .text("idf:"+round3(d[1])+" coeff:"+round3(d[2])+" weight:"+round3(d[3]))
 
                 d3.select(this)
                     .transition()
@@ -304,7 +304,7 @@
                     .attr("x",0.03*WIDTH)
                     .attr("y",HEIGHT)
                     .style("font",TEXT_STYLE_FRONT)
-                    .text("idf:"+round3(d[1])+" weight:"+round3(d[3])+" total:"+round3(d[3]))
+                    .text("idf:"+round3(d[1])+" coeff:"+round3(d[2])+" weight:"+round3(d[3]))
 
                 d3.select(this)
                     .transition()
