@@ -36,7 +36,7 @@
           </div>
         <script>
         // Threshold
-        const THRESHOLD = 0.6
+        const THRESHOLD = 0.7
         // Max radius
         const MAX_R = 15
         // Size of svg
@@ -48,7 +48,7 @@
         function round3(d){
             return Math.round(d*1000)/1000
         }
-    	var raw_data = {{data|tojson}}
+    	var raw_data = {{data1|tojson}}
         var svg = d3.select(".scatter_diagram")
             .select("svg")
             .attr("width",WIDTH)
@@ -206,6 +206,7 @@
             .text("idf")
 
     </script>
+
     </div>
 </div>
 
@@ -221,12 +222,174 @@
 
 <script>
     $("#inputModel").change(function(){
+        var raw_data = '';
         if (this.value == 'model2'){
             $('#static-info')[0].src = "static/images/politics.png";
+            raw_data = {{data2|tojson}}
         }
         else{
             $('#static-info')[0].src = "static/images/sentiment.png";
+            raw_data = {{data1|tojson}}
         }
+        d3.selectAll("svg > *").remove();
+        function round3(d){
+            return Math.round(d*1000)/1000
+        }
+        var svg = d3.select(".scatter_diagram")
+            .select("svg")
+            .attr("width",WIDTH)
+            .attr("height",HEIGHT)
+
+        var maxX = 0
+        var maxY = 0
+        var minY = 99
+        var maxZ = 0
+        for (var i = 0; i < raw_data.length; i++) {
+            if (maxX<Math.abs(raw_data[i][1])) {maxX = Math.abs(raw_data[i][1])}
+            if (maxY<raw_data[i][2]) {maxY = raw_data[i][2]}
+            if (minY>raw_data[i][2]) {minY = raw_data[i][2]}
+            if(maxZ<Math.abs(raw_data[i][3])){maxZ = Math.abs(raw_data[i][3])}
+        }
+
+        var scaleX = d3.scaleLinear()
+            .domain([-maxX,maxX])
+            .range([WIDTH*0.1,WIDTH*0.8]);
+        var scaleY = d3.scaleLinear()
+            .domain([minY,maxY])
+            .range([HEIGHT*0.1,HEIGHT*0.9]);
+        var scaleR = d3.scaleLinear()
+            .domain([0,maxZ])
+            .range([0,MAX_R]);
+
+        var circles = svg.selectAll("circle")
+            .data(raw_data)
+            .enter()
+            .append("circle")
+            .attr("cx",function(d){
+                return scaleX(d[1]);
+            })
+            .attr("cy",function(d){
+                return scaleY(d[2]);
+            })
+            .attr("r",function(d){
+                return scaleR(Math.abs(d[3]));
+            })
+            .style("fill",function(d){
+                opacity = scaleR(Math.abs(d[3]))/(MAX_R*THRESHOLD)
+                if (d[3]>0) {
+                    return "rgba(255,127,14,"+opacity+")"
+                }
+                else{
+                    return "rgba(31,119,180,"+opacity+")"
+                }
+            })
+            .on("mouseover",function(d){
+                svg.append("text")
+                    .attr("class","token_info")
+                    .attr("x",scaleX(d[1])+10)
+                    .attr("y",scaleY(d[2])-5)
+                    .style("font",TEXT_STYLE_FRONT)
+                    .attr("fill",COLOR_CHANGED)
+                    .text(d[0])
+
+                svg.append("text")
+                    .attr("class","token_info")
+                    .attr("x",0.03*WIDTH)
+                    .attr("y",0.94*HEIGHT)
+                    .style("font",TEXT_STYLE_FRONT)
+                    .text(d[0])
+
+                svg.append("text")
+                    .attr("class","token_info")
+                    .attr("x",0.03*WIDTH)
+                    .attr("y",HEIGHT)
+                    .style("font",TEXT_STYLE_FRONT)
+                    .text("idf:"+round3(d[1])+" weight:"+round3(d[3])+" total:"+round3(d[3]))
+
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style("fill",COLOR_CHANGED)
+            })
+            .on("mouseout",function(d){
+                opacity = scaleR(Math.abs(d[3]))/5
+                var fill = ""
+                if (d[3]>0) {
+                    fill = "rgba(255,127,14,"+opacity+")"
+                }
+                else{
+                    fill = "rgba(31,119,180,"+opacity+")"
+                }
+                d3.select(this)
+                    .transition()
+                    .duration(300)
+                    .style("fill",fill);
+
+                svg.selectAll(".token_info")
+                    .remove()
+            })
+
+        var tokens = svg.selectAll("text")
+            .data(raw_data)
+            .enter()
+            .append("text",function(d){return d[0]})
+            .attr("id",function(d,i){return "id_"+i})
+            .attr("class","tokens")
+            .attr("x",function(d){return scaleX(d[1])+10})
+            .attr("y",function(d){return scaleY(d[2])-5})
+            .style("font",TEXT_STYLE_FRONT)
+            .text(function(d){return d[0]})
+            .style("display","none")
+
+
+        var xAxis = d3.axisBottom(scaleX).ticks(4)
+        svg.append("g")
+            .call(xAxis)
+
+        var yAxis = d3.axisRight(scaleY).ticks(4)
+        svg.append("g")
+            .call(yAxis)
+
+        var slider = d3.select(".scatter_diagram")
+            .select("input")
+            .attr("max",maxZ)
+            .attr("step",maxZ/100)
+            .on("input", function(d){
+                var thre = d3.select(this).property("value")
+                if (thre/maxZ>THRESHOLD) {
+                    circles.style("display",function(d,i){
+                        if (Math.abs(d[3])<thre) {
+                            svg.select("#id_"+i)
+                                .style("display","none")
+                            return "none"}
+                        else {
+                            svg.select("#id_"+i)
+                                .style("display","")
+                            }
+                    })
+                } else {
+                    svg.selectAll(".tokens")
+                        .style("display","none")
+                    circles.style("display",function(d){
+                        if (Math.abs(d[3])<thre) {
+                            return "none"}
+                    })
+                }
+
+            })
+         svg.append("text")
+            .attr("x",0.5*WIDTH)
+            .attr("y",0.1*HEIGHT)
+            .attr("text-anchor","middle")
+            .style("font","15px tahoma, sans-serif")
+            .text("coeff")
+
+        svg.append("text")
+            .attr("x",0.05*WIDTH)
+            .attr("y",0.5*HEIGHT)
+            .attr("text-anchor","middle")
+            .style("font","15px tahoma, sans-serif")
+            .text("idf")
     })
 </script>
 <script>
