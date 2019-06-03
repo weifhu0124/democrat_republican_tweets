@@ -152,6 +152,7 @@
             .attr("x",function(d){return scaleX(d[1])+10})
             .attr("y",function(d){return scaleY(d[2])-5})
             .style("font",TEXT_STYLE_FRONT)
+            .style("opacity",0.2)
             .text(function(d){return d[0]})
             .style("display","none")
 
@@ -337,6 +338,7 @@
             .attr("class","tokens")
             .attr("x",function(d){return scaleX(d[1])+10})
             .attr("y",function(d){return scaleY(d[2])-5})
+            .style("opacity",0.2)
             .style("font",TEXT_STYLE_FRONT)
             .text(function(d){return d[0]})
             .style("display","none")
