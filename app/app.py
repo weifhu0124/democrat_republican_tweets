@@ -123,8 +123,9 @@ def get_feature_view(raw, weights):
 @app.route('/')
 def run():
   import pickle
-  f = open('view/fake_data.pkl', 'rb')
+  f = open('view/data_m2.pkl', 'rb')
   data = pickle.load(f)
+  print(len(data))
   return render_template('index.html', data=data)
 
 @app.route('/upload',methods=['post'])
