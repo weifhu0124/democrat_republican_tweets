@@ -1,5 +1,4 @@
 Flask
 gunicorn
-pickle
 nltk
 pdb
