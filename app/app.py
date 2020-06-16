@@ -177,7 +177,6 @@ def upload():
   digram_view = get_diagram_view(cls, tfidf, unigram_weights+filtered)
   # digram_bigram = get_diagram_view(cls, tfidf, filtered)
   res['diagram_view'] = digram_view
-  print(res)
   
   # [token, coeff, idf , weight], ...]
   # res['feature_view'] = get_feature_view(text)
