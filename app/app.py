@@ -47,7 +47,6 @@ def get_feature_weights(raw, lower_nopunc, raw_nopunc, cls, tfidf, gram_length):
   filtered = []
   if gram_length > 1:
     filtered = remove_overlap(weights, lower_nopunc, raw, raw_nopunc)
-    print("filtered", filtered)
   else:
     weights = remove_duplicate(weights)
 
