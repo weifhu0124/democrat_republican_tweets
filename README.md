@@ -1,5 +1,6 @@
 # Website Deployment
-https://political-tweets-sentiment.herokuapp.com/
+https://political-tweets-sentiment.herokuapp.com/  
+(It might take a while to load)
 
 ## How to use this website
 When you open the link above, you will be directed to homepage
